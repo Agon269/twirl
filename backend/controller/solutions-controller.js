@@ -3,6 +3,7 @@ const HttpError = require("../models/error");
 const Solution = require("../models/solution");
 const User = require("../models/user");
 
+//============================================== CREATE SOLUTION ===================================
 const createsolution = async (req, res, next) => {
   const errors = validationResult(req);
 
@@ -10,95 +11,62 @@ const createsolution = async (req, res, next) => {
     const error = new HttpError("Invalid inputs", 422);
     return next(error);
   }
+
   const { title, description, video } = req.body;
   const { id } = req.user;
 
-  const solution = new Solution({
-    title,
-    description,
-    video,
-    userId: id,
-    comments: [],
-  });
-
-  try {
-    solution.save();
-  } catch (err) {
-    const error = new HttpError(
-      "something went wrong couldnt sign you up",
-      500
-    );
-    return next(error);
-  }
   let user;
   try {
     user = await User.findOne({ _id: id });
   } catch (err) {
     const error = new HttpError(
-      "something went wrong couldnt sign you up",
+      "Sorry something went wrong couldn't access the database",
       500
     );
     return next(error);
   }
 
-  user.solutions.push(solution.id);
+  const solution = new Solution({
+    title,
+    description,
+    video,
+    comments: [],
+  });
+  solution.user = user;
+
   try {
-    await user.save();
+    solution.save();
   } catch (err) {
     const error = new HttpError(
-      "something went wrong couldnt sign you up",
+      "Sorry something went wrong couldn't access the database",
       500
     );
     return next(error);
   }
 
-  res.status(201).json({ solutionId: solution.id });
+  res.send(solution);
 };
-
+//========================================GET ONE SOLUTION =======================================
 const showsolution = async (req, res, next) => {
   let solution;
   try {
-    solution = await Solution.findOne({ _id: req.params.id });
+    solution = await Solution.findById({ _id: req.params.id }).populate("user");
   } catch (err) {
-    const error = new HttpError(
-      "something went wrong couldnt sign you up",
-      500
-    );
-    return next(error);
-  }
-  let user;
-  try {
-    user = await User.findOne({ _id: solution.userId });
-  } catch (err) {
-    const error = new HttpError(
-      "something went wrong couldnt sign you up",
-      500
-    );
+    const error = new HttpError("Couldn't find solution", 400);
     return next(error);
   }
 
-  let sol = {
-    title: solution.title,
-    description: solution.description,
-    video: solution.video,
-    comments: solution.comments,
-    createrName: user.userName,
-    createrId: user._id,
-    id: solution._id,
-    avatar: user.avatar,
-  };
-
-  res.send(sol);
+  res.send(solution);
 };
-
+//==============================================CREATE COMMENT ========================================
 const createcomment = async (req, res, next) => {
   const { userId, comment } = req.body;
   let solution;
   try {
-    solution = await Solution.findOne({ _id: req.params.id });
+    solution = await Solution.findById({ _id: req.params.id }).populate("user");
   } catch (err) {
     const error = new HttpError(
-      "something went wrong couldnt sign you up",
+      "Sorry something went wrong couldnt access the database",
       500
     );
     return next(error);
@@ -120,16 +88,7 @@ const createcomment = async (req, res, next) => {
     userAvatar: commentor.avatar,
     comment,
   });
-  let user;
-  try {
-    user = await User.findOne({ _id: solution.userId });
-  } catch (err) {
-    const error = new HttpError(
-      "something went wrong couldnt sign you up",
-      500
-    );
-    return next(error);
-  }
+
   try {
     await solution.save();
   } catch (err) {
@@ -140,20 +99,9 @@ const createcomment = async (req, res, next) => {
     return next(error);
   }
 
-  let sol = {
-    title: solution.title,
-    description: solution.description,
-    video: solution.video,
-    comments: solution.comments,
-    createrName: user.userName,
-    createrId: user._id,
-    id: solution._id,
-    avatar: user.avatar,
-  };
-
-  res.send(sol);
+  res.send(solution);
 };
-
+//================================================== EDIT SOLUTION ========================
 const editsolution = async (req, res, next) => {
   const errors = validationResult(req);
 
@@ -161,18 +109,19 @@ const editsolution = async (req, res, next) => {
     const error = new HttpError("Invalid inputs", 422);
     return next(error);
   }
+
   let solution;
   try {
-    solution = await Solution.findOne({ _id: req.params.id });
+    solution = await Solution.findById({ _id: req.params.id }).populate("user");
   } catch (err) {
     const error = new HttpError(
-      "something went wrong couldnt sign you up",
+      "Sorry something went wrong couldnt edit the solution",
       500
     );
     return next(error);
   }
 
-  if (solution.userId !== req.user.id) {
+  if (solution.user.id !== req.user.id) {
     const error = new HttpError("Unauthorized", 403);
     return next(error);
   }
@@ -184,34 +133,13 @@ const editsolution = async (req, res, next) => {
 
   await solution.save();
 
-  let user;
-  try {
-    user = await User.findOne({ _id: req.user.id });
-  } catch (err) {
-    const error = new HttpError(
-      "something went wrong couldnt sign you up",
-      500
-    );
-    return next(error);
-  }
-  let sol = {
-    title: solution.title,
-    description: solution.description,
-    video: solution.video,
-    comments: solution.comments,
-    createrName: user.userName,
-    createrId: user._id,
-    id: solution._id,
-    avatar: user.avatar,
-  };
-
-  res.send(sol);
+  res.send(solution);
 };
-
+//==================================== GET ALL SOLUTIONS ===========================
 const getsolutions = async (req, res, next) => {
   let solutions;
   try {
-    solutions = await Solution.find({});
+    solutions = await Solution.find().populate("user");
   } catch (err) {
     const error = new HttpError(
       "something went wrong couldnt sign you up",
@@ -223,8 +151,51 @@ const getsolutions = async (req, res, next) => {
   res.send(solutions);
 };
 
+//================================ DELETE SOLUTION =================================
+const deletesolution = async (req, res, next) => {
+  let solution;
+  try {
+    solution = await Solution.findById({ _id: req.params.id }).populate("user");
+  } catch (err) {
+    const error = new HttpError("Sorry something went wrong.", 500);
+    return next(error);
+  }
+
+  if (solution.user.id !== req.user.id) {
+    const error = new HttpError("Unauthorized", 403);
+    return next(error);
+  }
+
+  try {
+    await Solution.deleteOne({ _id: solution.id });
+  } catch (err) {
+    const error = new HttpError(
+      "Sorry something went wrong couldn't delete the solution.",
+      500
+    );
+    return next(error);
+  }
+
+  res.send({ message: "Successfully deleted" });
+};
+
+//=================================== GET USERS SOLUTIONS ============================
+const usersolutions = async (req, res, next) => {
+  let solutions;
+  try {
+    solutions = await Solution.find({ user: req.params.id }).populate("user");
+  } catch (err) {
+    const error = new HttpError("Sorry something went wrong.", 500);
+    return next(error);
+  }
+
+  res.send(solutions);
+};
+
 exports.createsolution = createsolution;
 exports.showsolution = showsolution;
 exports.createcomment = createcomment;
 exports.editsolution = editsolution;
 exports.getsolutions = getsolutions;
+exports.deletesolution = deletesolution;
+exports.usersolutions = usersolutions;

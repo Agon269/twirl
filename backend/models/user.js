@@ -14,8 +14,9 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    solutions: {
-      type: Array,
+    banner: {
+      type: String,
+      required: true,
     },
   },
   {

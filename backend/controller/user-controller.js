@@ -5,7 +5,7 @@ const bcrypt = require("bcrypt");
 const User = require("../models/user");
 const HttpError = require("../models/error");
 const { avatars } = require("../models/avatars");
-
+const { banners } = require("../models/banners");
 const signJwt = (id, userName, avatar) => {
   return jwt.sign({ id, userName, avatar }, process.env.JWT_KEY);
 };
@@ -50,15 +50,16 @@ const signup = async (req, res, next) => {
     const error = new HttpError("Invalid credential", 422);
     return next(error);
   }
-  let newUser = new User();
-
-  newUser.userName = userName;
-  newUser.password = password;
-  newUser.avatar = avatars[Math.floor(Math.random() * avatars.length)];
-  newUser.solutions = [];
 
   const salt = await bcrypt.genSalt(10);
-  newUser.password = await bcrypt.hash(newUser.password, salt);
+  const newPassword = await bcrypt.hash(password, salt);
+
+  let newUser = new User({
+    userName,
+    password: newPassword,
+    avatar: avatars[Math.floor(Math.random() * avatars.length)],
+    banner: (banner = banners[Math.floor(Math.random() * banners.length)]),
+  });
 
   try {
     await newUser.save();
@@ -127,7 +128,19 @@ const currentuser = async (req, res, next) => {
   res.send({ currentUser: req.user || null });
 };
 
+//================================ Get ONE USER =====================
+const getuser = async (req, res, next) => {
+  let user;
+  try {
+    user = await User.findById({ _id: req.params.id });
+  } catch (err) {
+    const error = new HttpError("Couldn't find user", 400);
+    return next(error);
+  }
+  res.send(user);
+};
 exports.signup = signup;
 exports.signin = signin;
 exports.signout = signout;
 exports.currentuser = currentuser;
+exports.getuser = getuser;

@@ -28,7 +28,6 @@ app.use((error, req, res, next) => {
   if (res.headerSent) {
     return next(error);
   }
-  console.log(error.code);
   res
     .status(error.code || 500)
     .json({ message: error.message || "An unkown error occurred" });
@@ -36,7 +35,7 @@ app.use((error, req, res, next) => {
 
 mongoose
   .connect(
-    "mongodb+srv://dev1:bb1sJ7OZGppw82aC@streamy-dev.at6ng.mongodb.net/streamydev?retryWrites=true&w=majority",
+    "mongodb+srv://dev1:bb1sJ7OZGppw82aC@streamy-dev.at6ng.mongodb.net/streamydev1?retryWrites=true&w=majority",
     {
       useNewUrlParser: true,
       useUnifiedTopology: true,

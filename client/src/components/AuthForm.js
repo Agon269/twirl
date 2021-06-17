@@ -27,6 +27,9 @@ const AuthForm = ({ onSubmit }) => {
     if (!value) {
       error = "Password is required";
     }
+    if (value.length < 6) {
+      error = "Password length needs to be at least 6 characters.";
+    }
     return error;
   };
 
@@ -48,7 +51,6 @@ const AuthForm = ({ onSubmit }) => {
       onSubmit={(values, actions) => {
         actions.setSubmitting(true);
         onSubmit(values);
-        actions.setSubmitting(false);
       }}
     >
       {(props) => (
@@ -81,7 +83,13 @@ const AuthForm = ({ onSubmit }) => {
                     autoComplete={"false"}
                   />
                   <InputRightElement width="4.5rem">
-                    <Button h="1.75rem" size="sm" onClick={handleClick}>
+                    <Button
+                      h="1.75rem"
+                      size="sm"
+                      onClick={handleClick}
+                      color={"blue.700"}
+                      _focus={{ outline: "none" }}
+                    >
                       {show ? "Hide" : "Show"}
                     </Button>
                   </InputRightElement>
@@ -99,6 +107,8 @@ const AuthForm = ({ onSubmit }) => {
                 light={"blue.700"}
                 dark={"blue.500"}
                 type={"submit"}
+                disabled={props.isSubmitting === true ? true : false}
+                loading={props.isSubmitting === true ? true : false}
                 mt={"4"}
               />
             </Stack>

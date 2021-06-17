@@ -5,60 +5,26 @@ import {
   FormErrorMessage,
   Textarea,
   Stack,
+  Select,
 } from "@chakra-ui/react";
 import MyButton from "./MyButton";
 
 import { Field, Form, Formik } from "formik";
+import {
+  validateTitle,
+  validateDes,
+  validateVideo,
+  validateCat,
+} from "./validate";
 const streamForm = ({ onSubmit, initialValues, type }) => {
-  const validateTitle = (value) => {
-    let error;
-    if (!value) {
-      error = "Title required";
-    }
-    return error;
-  };
-  const validateDes = (value) => {
-    let error;
-    if (!value) {
-      error = "Description is required";
-    }
-    return error;
-  };
-  const validateVideo = (value) => {
-    let errors;
-
-    if (!value) {
-      errors = "Video is required";
-      return errors;
-    } else if (value.type !== "video/mp4") {
-      errors = "Needs to be an mp4 video";
-    }
-    return errors;
-  };
   return (
     <Formik
       validateOnChange={true}
       initialValues={{
         title: initialValues.title,
         description: initialValues.description,
+        category: initialValues.category,
         video: "",
-      }}
-      validate={(values) => {
-        let errors = {};
-        if (validateTitle(values.title)) {
-          errors.title = validateTitle(values.title);
-        }
-
-        if (validateDes(values.description)) {
-          errors.description = validateDes(values.description);
-        }
-        if (validateVideo(values.video)) {
-          if (type === "create") {
-            errors.video = validateVideo(values.video);
-          }
-        }
-
-        return errors;
       }}
       onSubmit={(values, actions) => {
         actions.setSubmitting(true);
@@ -67,7 +33,7 @@ const streamForm = ({ onSubmit, initialValues, type }) => {
     >
       {(props) => (
         <Form>
-          <Field name="title">
+          <Field name="title" validate={validateTitle}>
             {({ field, form }) => (
               <FormControl isInvalid={form.errors.title && form.touched.title}>
                 <FormLabel htmlFor="title">Title</FormLabel>
@@ -77,7 +43,7 @@ const streamForm = ({ onSubmit, initialValues, type }) => {
             )}
           </Field>
 
-          <Field name="description">
+          <Field name="description" validate={validateDes}>
             {({ field, form }) => (
               <FormControl
                 isInvalid={form.errors.description && form.touched.description}
@@ -92,15 +58,38 @@ const streamForm = ({ onSubmit, initialValues, type }) => {
               </FormControl>
             )}
           </Field>
+
+          <Field name="category" validate={validateCat}>
+            {({ field, form }) => (
+              <FormControl
+                isInvalid={form.errors.category && form.touched.category}
+              >
+                <FormLabel htmlFor="category">Category</FormLabel>
+                <Select
+                  name="category"
+                  placeholder="Category"
+                  id="category"
+                  {...field}
+                >
+                  <option value="js">Javascript</option>
+                  <option value="java">java</option>
+                  <option value="py">Python</option>
+                  <option value="cpp">C ++</option>
+                </Select>
+                <FormErrorMessage>{form.errors.category}</FormErrorMessage>
+              </FormControl>
+            )}
+          </Field>
+
           {type === "create" ? (
-            <Field name="video">
+            <Field name="video" validate={validateVideo}>
               {({ field, form }) => (
                 <FormControl
                   isInvalid={form.errors.video && form.touched.video}
                 >
                   <FormLabel htmlFor="video">Video</FormLabel>
                   <Input
-                    p={"10"}
+                    p={"12"}
                     type="file"
                     id="video"
                     onClick={() =>

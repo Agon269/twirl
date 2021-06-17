@@ -1,6 +1,7 @@
 .solution {
   position: relative;
   display: inline-block;
+  background-color: #9147ff;
 }
 
 .solution:before,
@@ -46,4 +47,7 @@
 
 .solution:hover:after {
   transform: rotate(45deg) scale(1);
+}
+.solution:hover {
+  cursor: pointer;
 }

@@ -11,6 +11,7 @@ import User from "./pages/User";
 import Error404 from "./pages/Error404";
 import Header from "./components/Header";
 import CreateSolution from "./pages/CreateSolution";
+import ProtectedRoute from "./components/ProtectedRoute";
 import history from "./history";
 
 export default function App() {
@@ -26,7 +27,11 @@ export default function App() {
 
             <Route exact path="/signup" component={Signup} />
 
-            <Route exact path="/createsolution" component={CreateSolution} />
+            <ProtectedRoute
+              exact
+              path="/createsolution"
+              component={CreateSolution}
+            />
 
             <Route exact path="/solution/:id" component={Solution} />
 

@@ -12,6 +12,7 @@ const MyButton = ({
   loading,
   loadingText,
   disabled,
+  variant,
 }) => {
   return (
     <Button
@@ -20,12 +21,14 @@ const MyButton = ({
       _hover={{
         backgroundColor: { dark },
       }}
+      _focus={{ outline: "none" }}
       mt={mt}
       type={type}
       isLoading={loading}
       loadingText={loadingText}
       size={size}
       disabled={disabled}
+      variant={variant}
     >
       {label}
     </Button>

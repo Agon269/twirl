@@ -23,7 +23,7 @@ const CommentForm = ({ user, solution, onSubmit }) => {
   };
   return (
     <>
-      <Text m={2} size={"xl"}>
+      <Text m={2} mb={"8"} size={"xl"}>
         {solution.comments.length === 0
           ? "Be the first to comment"
           : `${solution.comments.length} Comments`}

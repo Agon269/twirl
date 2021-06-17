@@ -3,10 +3,13 @@ import SolutionForm from "../components/SolutionForm";
 import { connect } from "react-redux";
 import { Box, Center, Heading } from "@chakra-ui/react";
 import app from "../firebase";
+import { useToast } from "@chakra-ui/toast";
 
 import { createSolution } from "../actions/index";
 
-const CreateSolution = ({ createSolution }) => {
+const CreateSolution = ({ createSolution, error }) => {
+  const toast = useToast();
+
   const upload = async (acceptedFiles) => {
     let bucketName = "files";
     let file = acceptedFiles;
@@ -19,17 +22,30 @@ const CreateSolution = ({ createSolution }) => {
     try {
       formVals.video = await upload(formVals.video);
     } catch (err) {
-      console.log(err);
+      toast({
+        title: err.message,
+        status: "error",
+        duration: 2000,
+        isClosable: true,
+      });
     }
     createSolution(formVals);
   };
+  if (error) {
+    toast({
+      title: error.message,
+      status: "error",
+      duration: 2000,
+      isClosable: true,
+    });
+  }
   return (
     <>
       <Heading textAlign={"center"}>Create a solution</Heading>
 
       <Center py={"6"}>
         <Box
-          maxW={"sm"}
+          maxW={"md"}
           w={"full"}
           boxShadow={"2xl"}
           borderWidth={"1px"}
@@ -42,6 +58,7 @@ const CreateSolution = ({ createSolution }) => {
               initialValues={{
                 title: "",
                 description: "",
+                category: "",
               }}
               type={"create"}
             />
@@ -51,4 +68,9 @@ const CreateSolution = ({ createSolution }) => {
     </>
   );
 };
-export default connect(null, { createSolution })(CreateSolution);
+
+const mapStateToPropos = (state) => {
+  return { error: state.error };
+};
+
+export default connect(mapStateToPropos, { createSolution })(CreateSolution);

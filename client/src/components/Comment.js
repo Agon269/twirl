@@ -1,5 +1,5 @@
 import React from "react";
-import { Avatar, Stack, Text, Link } from "@chakra-ui/react";
+import { Avatar, Stack, Text, Link, Flex } from "@chakra-ui/react";
 import { Link as RouterLink } from "react-router-dom";
 import uuid from "react-uuid";
 
@@ -19,29 +19,36 @@ const Comment = ({ comments }) => {
         >
           <Avatar src={comment.userAvatar} mr={2} />
         </Link>
-        <Stack>
-          <Link
-            as={RouterLink}
-            _hover={{
-              textDecoration: "none",
-              cursor: "pointer",
-            }}
-            _focus={{ outline: "none" }}
-            to={`/user/${comment.userId}`}
-          >
-            <Text fontSize={"sm"} mb={"-2"} color={"gray.600"}>
-              {comment.userName}
-            </Text>
-          </Link>
+        <Flex direction={"column"}>
+          <div style={{ width: "fit-content" }}>
+            <Link
+              as={RouterLink}
+              _hover={{
+                textDecoration: "none",
+                cursor: "pointer",
+              }}
+              _focus={{ outline: "none" }}
+              to={`/user/${comment.userId}`}
+            >
+              <Text
+                w={"min-content"}
+                fontSize={"sm"}
+                m={"0"}
+                color={"gray.500"}
+              >
+                {comment.userName}
+              </Text>
+            </Link>
+          </div>
 
-          <Text mt={-14}>
+          <p>
             {comment.comment.length > 50 ? (
               <TruncatedText longText={comment.comment} lines={3} />
             ) : (
               comment.comment
             )}
-          </Text>
-        </Stack>
+          </p>
+        </Flex>
       </Stack>
     );
   });

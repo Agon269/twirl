@@ -1,7 +1,7 @@
 import React from "react";
 import DarkMode from "./DarkMode";
 import MyButton from "./MyButton";
-import Signout from "./Signout";
+
 import {
   Link,
   Box,
@@ -12,29 +12,12 @@ import {
   MenuList,
   MenuItem,
   Portal,
+  MenuDivider,
 } from "@chakra-ui/react";
 import { Link as RouterLink } from "react-router-dom";
+import history from "../history";
 
-const MenuItems = ({ children, isLast, to = "/", ...rest }) => {
-  return (
-    <Link
-      as={RouterLink}
-      _hover={{
-        textDecoration: "none",
-        cursor: "pointer",
-      }}
-      _focus={{
-        outlineColor: "transparent",
-      }}
-      to={to}
-      fontWeight={"bold"}
-      fontSize={"sm"}
-    >
-      <span {...rest}>{children}</span>
-    </Link>
-  );
-};
-const HeaderItems = ({ isOpen, currentUser }) => {
+const HeaderItems = ({ isOpen, currentUser, onAuthChange }) => {
   return (
     <Box
       display={{ base: isOpen ? "block" : "none", md: "block" }}
@@ -47,24 +30,38 @@ const HeaderItems = ({ isOpen, currentUser }) => {
         direction={["column", "row", "row", "row"]}
         pt={[4, 4, 0, 0]}
       >
-        <MenuItems to="/">Home</MenuItems>
-        <MenuItems to="/solutions">Solutions</MenuItems>
+        <Link
+          as={RouterLink}
+          to="/"
+          _hover={{
+            textDecoration: "none",
+            cursor: "pointer",
+          }}
+          _focus={{
+            outlineColor: "transparent",
+          }}
+        >
+          Home
+        </Link>
         <Stack direction={["column", "row", "row", "row"]}>
-          {buttons(currentUser)}
+          {buttons(currentUser, onAuthChange)}
         </Stack>
-        <MenuItems to="#">
-          <DarkMode />
-        </MenuItems>
+
+        <DarkMode />
       </Stack>
     </Box>
   );
 };
 
-const buttons = (currentUser) => {
+const buttons = (currentUser, onAuthChange) => {
   if (currentUser === null) {
     return (
       <>
-        <MenuItems to="/signin">
+        <span
+          onClick={() => {
+            routeTo("/signin");
+          }}
+        >
           <MyButton
             label={"Sign in"}
             size={"sm"}
@@ -72,8 +69,12 @@ const buttons = (currentUser) => {
             light={"gray.400"}
             dark={"gray.900"}
           />
-        </MenuItems>
-        <MenuItems to="/signup">
+        </span>
+        <span
+          onClick={() => {
+            routeTo("/signup");
+          }}
+        >
           <MyButton
             label={"Sign up"}
             size={"sm"}
@@ -81,34 +82,41 @@ const buttons = (currentUser) => {
             light={"blue.700"}
             dark={"blue.500"}
           />
-        </MenuItems>
+        </span>
       </>
     );
   } else {
     return (
-      <>
-        <MenuItems to={"#"}>
-          <Menu>
-            <MenuButton>
-              <Avatar name={currentUser.userName} src={currentUser.avatar} />
-            </MenuButton>
-            <Portal>
-              <MenuList>
-                <MenuItem>
-                  <Signout />
-                </MenuItem>
-                <MenuItem>
-                  <MenuItems to={`/user/${currentUser.id}`}>
-                    My solutions
-                  </MenuItems>
-                </MenuItem>
-              </MenuList>
-            </Portal>
-          </Menu>
-        </MenuItems>
-      </>
+      <Menu>
+        <MenuButton>
+          <Avatar name={currentUser.userName} src={currentUser.avatar} />
+        </MenuButton>
+        <Portal>
+          <MenuList>
+            <MenuItem
+              onClick={() => {
+                routeTo(`/user/${currentUser.id}`);
+              }}
+            >
+              My Solutions
+            </MenuItem>
+            <MenuItem
+              onClick={() => {
+                routeTo("/createsolution");
+              }}
+            >
+              Create Solution
+            </MenuItem>
+            <MenuDivider />
+            <MenuItem onClick={() => onAuthChange()}>
+              Signout
+              {/* <Signout /> */}
+            </MenuItem>
+          </MenuList>
+        </Portal>
+      </Menu>
     );
   }
 };
-
+const routeTo = (to) => history.push(to);
 export default HeaderItems;

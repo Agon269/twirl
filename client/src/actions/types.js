@@ -4,3 +4,8 @@ export const CREATE_COMMENT = "CREATE_COMMENT";
 export const DELETE_SOLUTION = "DELETE_SOLUTION";
 export const GET_SOLUTIONS = "GET_SOLUTIONS";
 export const GET_SOLUTION = "GET_SOLUTION";
+export const GET_USER_SOLUTION = "GET_USER_SOLUTION";
+export const GET_USER = "GET_USER";
+
+export const GET_ERROR = "GET_ERROR";
+export const POST_ERROR = "POST_ERROR";

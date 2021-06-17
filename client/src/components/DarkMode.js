@@ -12,6 +12,8 @@ export default function DarkMode() {
         size={"md"}
         alignSelf="flex-end"
         onClick={toggleColorMode}
+        mr={"4"}
+        _focus={{ outline: "none" }}
       />
     </div>
   );

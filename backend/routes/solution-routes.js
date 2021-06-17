@@ -7,14 +7,18 @@ const { check } = require("express-validator");
 router.post(
   "/",
   requireAuth,
-  [check("title").not().isEmpty(), check("description").not().isEmpty()],
+  [
+    check("title").not().isEmpty(),
+    check("description").not().isEmpty(),
+    check("category").not().isEmpty(),
+  ],
   solutionControllers.createsolution
 );
 
 router.get("/:id", solutionControllers.showsolution);
 router.get("/", solutionControllers.getsolutions);
 
-router.put("/comment/:id", requireAuth, solutionControllers.createcomment);
+router.post("/comment/:id", requireAuth, solutionControllers.createcomment);
 
 router.put(
   "/edit/:id",
@@ -22,4 +26,9 @@ router.put(
   requireAuth,
   solutionControllers.editsolution
 );
+
+router.delete("/:id", requireAuth, solutionControllers.deletesolution);
+
+router.get("/user/:id", solutionControllers.usersolutions);
+
 module.exports = router;

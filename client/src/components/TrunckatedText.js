@@ -17,7 +17,7 @@ const TruncatedText = ({ longText, lines }) => {
       <Truncate
         lines={!expand && lines}
         ellipsis={
-          <Badge onClick={toggleLines} _hover={{ cursor: "pointer" }}>
+          <Badge ml={"3"} onClick={toggleLines} _hover={{ cursor: "pointer" }}>
             SHOW MORE
           </Badge>
         }
@@ -26,7 +26,7 @@ const TruncatedText = ({ longText, lines }) => {
         {longText}
       </Truncate>
       {!trunk && expand && (
-        <Badge onClick={toggleLines} _hover={{ cursor: "pointer" }}>
+        <Badge ml={"3"} onClick={toggleLines} _hover={{ cursor: "pointer" }}>
           SHOW LESS
         </Badge>
       )}

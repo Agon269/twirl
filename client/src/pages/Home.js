@@ -1,36 +1,43 @@
-import React, { useContext, useEffect } from "react";
-import { AuthContext } from "../Auth";
-import { Container, Box, SimpleGrid, Text } from "@chakra-ui/layout";
+import React, { useEffect } from "react";
+import { Box, SimpleGrid, Heading } from "@chakra-ui/layout";
 import { connect } from "react-redux";
 import { getSolutions } from "../actions/index";
 
 import SolutionCard from "../components/SolutionCard";
 
-const Home = ({ getSolutions, solutions }) => {
-  // const { currentUser } = useContext(AuthContext);
-
+const Home = ({ getSolutions, solutions, error }) => {
   useEffect(() => {
     getSolutions();
   }, [getSolutions]);
 
-  if (!solutions) {
-    return <div>Loading...</div>;
-  } else {
-    const renderSolutions = solutions.map((sol) => {
-      return <SolutionCard key={sol.id} sol={sol} />;
-    });
-    return (
-      <Box p={4}>
-        <SimpleGrid columns={[1, 2, 3, 4]} spacing={12}>
-          {renderSolutions}
-        </SimpleGrid>
-      </Box>
-    );
+  if (error && solutions.length === 0) {
+    return <div>Error</div>;
   }
+
+  if (solutions.length === 0) {
+    return <div>Loading...</div>;
+  }
+
+  const renderSolutions = solutions.reverse().map((sol) => {
+    return <SolutionCard key={sol.id} sol={sol} />;
+  });
+
+  return (
+    <Box p={4}>
+      <Heading m={"4"} size={"xl"} mb={"8"}>
+        Solutions
+      </Heading>
+      <SimpleGrid columns={[1, 2, 3, 4]} spacing={12}>
+        {renderSolutions}
+      </SimpleGrid>
+    </Box>
+  );
 };
 
 const mapStateToPropos = (state) => {
-  return { solutions: Object.values(state.solutions) };
+  let sols = Object.values(state.solutions);
+  sols.reverse();
+  return { solutions: sols, error: state.error };
 };
 
 export default connect(mapStateToPropos, { getSolutions })(Home);

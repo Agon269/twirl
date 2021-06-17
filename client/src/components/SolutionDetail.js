@@ -7,27 +7,28 @@ const SolutionDetail = ({ solution }) => {
   return (
     <>
       <Flex columns={2}>
-        <Avatar name={solution.createrName} src={solution.avatar} />
+        <Avatar name={solution.user.userName} src={solution.user.avatar} />
         <Link
           as={RouterLink}
           _hover={{
             textDecoration: "none",
             cursor: "pointer",
           }}
-          to={`/user/${solution.userId}`}
+          _focus={{ outline: "none" }}
+          to={`/user/${solution.user.id}`}
         >
           <Text ml={"4"} fontSize={"2xl"}>
-            {solution.createrName}
+            {solution.user.userName}
           </Text>
         </Link>
       </Flex>
-      <Text fontSize={"1xl"} p={4}>
+      <p fontSize={"1xl"} p={4}>
         {solution.description.length > 50 ? (
-          <TruncatedText longText={solution.description} lines={1} />
+          <TruncatedText longText={solution.description} lines={2} />
         ) : (
           solution.description
         )}
-      </Text>
+      </p>
     </>
   );
 };

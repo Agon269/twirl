@@ -8,8 +8,12 @@ import CommentForm from "../components/CommentForm";
 import Comment from "../components/Comment";
 import SolutionDetail from "../components/SolutionDetail";
 import MyButton from "../components/MyButton";
+import DeleteModal from "../components/DeleteModal";
+import { useToast } from "@chakra-ui/toast";
 
-const Solution = ({ getSolution, solution, match, createComment }) => {
+const Solution = ({ getSolution, solution, match, createComment, error }) => {
+  const toast = useToast();
+
   const { currentUser } = useContext(AuthContext);
 
   const { id } = match.params;
@@ -26,17 +30,31 @@ const Solution = ({ getSolution, solution, match, createComment }) => {
     };
     createComment(commentParams);
   };
-  if (!solution) {
-    return <div>No such solution...</div>;
+  if (error && !solution) {
+    return <div>Error</div>;
   }
-  const owner = currentUser?.id === solution.createrId;
+  if (!solution) {
+    return <div>Loading...</div>;
+  }
+  if (error) {
+    toast({
+      title: error.message,
+      status: "error",
+      duration: 2000,
+      isClosable: true,
+    });
+  }
+  const owner = currentUser?.id === solution.user.id;
 
   return (
     <>
       <Center p={6}>
         <SimpleGrid>
           <Box maxW={"3xl"} w={"full"} borderRadius={"lg"} overflow="hidden">
-            <video src={solution.video} controls width="800" />
+            <video width="800" height="240" controls>
+              <source src={solution.video} />
+              Your browser does not support the video tag.
+            </video>
           </Box>
           <Box pt={2}>
             <Text fontSize={"3xl"}>{solution.title}</Text>
@@ -46,6 +64,11 @@ const Solution = ({ getSolution, solution, match, createComment }) => {
                   mr={"4"}
                   as={RouterLink}
                   to={`/solution/edit/${solution.id}`}
+                  _hover={{
+                    textDecoration: "none",
+                    cursor: "pointer",
+                  }}
+                  _focus={{ outline: "none" }}
                 >
                   <MyButton
                     label={"Edit"}
@@ -56,13 +79,7 @@ const Solution = ({ getSolution, solution, match, createComment }) => {
                   />
                 </Link>
 
-                <MyButton
-                  label={"Delete"}
-                  size={"md"}
-                  variant={"outline"}
-                  light={"red.700"}
-                  dark={"red.500"}
-                />
+                <DeleteModal solutionId={solution.id} />
               </>
             ) : (
               ""
@@ -91,8 +108,12 @@ const Solution = ({ getSolution, solution, match, createComment }) => {
   );
 };
 const mapStateToProps = (state, ownProps) => {
-  return { solution: state.solutions[ownProps.match.params.id] };
+  return {
+    solution: state.solutions[ownProps.match.params.id],
+    error: state.error,
+  };
 };
-export default connect(mapStateToProps, { getSolution, createComment })(
-  Solution
-);
+export default connect(mapStateToProps, {
+  getSolution,
+  createComment,
+})(Solution);

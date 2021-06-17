@@ -26,4 +26,6 @@ router.get("/signout", userControllers.signout);
 
 router.get("/currentuser", auth, userControllers.currentuser);
 
+router.get("/:id", userControllers.getuser);
+
 module.exports = router;

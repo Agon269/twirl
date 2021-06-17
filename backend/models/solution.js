@@ -17,7 +17,13 @@ const solutionSchema = new mongoose.Schema(
     comments: {
       type: Array,
     },
-    userId: {
+    category: {
+      type: String,
+    },
+    thumbnail: {
+      type: String,
+    },
+    user: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
     },
