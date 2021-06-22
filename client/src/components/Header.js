@@ -58,7 +58,11 @@ const NavBarContainer = ({ children, ...props }) => {
       w="100%"
       mb={8}
       p={1}
-      bg={useColorModeValue("gray.100", "gray.900")}
+      bg={useColorModeValue("gray.200", "#171923")}
+      // style={{
+      //   "box-shadow":
+      //     " 0px 2px 4px -1px rgb(0 0 0 / 20%), 0px 4px 5px 0px rgb(0 0 0 / 14%), 0px 1px 10px 0px rgb(0 0 0 / 12%)",
+      // }}
       {...props}
     >
       {children}

@@ -4,11 +4,19 @@ import { createStore, applyMiddleware, compose } from "redux";
 import { Provider } from "react-redux";
 import reduxThunk from "redux-thunk";
 
-import { ChakraProvider, ColorModeScript } from "@chakra-ui/react";
+import { ChakraProvider } from "@chakra-ui/react";
 
 import App from "./App";
 import reducers from "./reducers";
 import theme from "./theme";
+
+// const theme = {
+//   modes: {
+//     dark: {
+//       background: "#000",
+//     },
+//   },
+// };
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 const store = createStore(
   reducers,
@@ -16,8 +24,7 @@ const store = createStore(
 );
 ReactDOM.render(
   <Provider store={store}>
-    <ChakraProvider>
-      <ColorModeScript theme={theme.config.initialColorMode} />
+    <ChakraProvider theme={theme}>
       <App />
     </ChakraProvider>
   </Provider>,

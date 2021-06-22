@@ -1,7 +1,7 @@
 import twirl from "../api/twirl";
 import {
   CREATE_SOLUTION,
-  EDIT_SOLUTIONS,
+  EDIT_SOLUTION,
   DELETE_SOLUTION,
   GET_SOLUTION,
   GET_SOLUTIONS,
@@ -10,6 +10,12 @@ import {
   GET_USER,
   GET_ERROR,
   POST_ERROR,
+  CREATE_PROBLEM,
+  GET_PROBLEM,
+  GET_PROBLEMS,
+  EDIT_PROBLEM,
+  CREATE_SOLUTION_PROBLEM,
+  GET_USER_PROBLEMS,
 } from "./types";
 import history from "../history";
 
@@ -64,7 +70,7 @@ export const getSolutions = () => async (dispatch) => {
 export const getUsersSolutions = (id) => async (dispatch) => {
   let res;
   try {
-    res = await twirl.get(`solutions/user/${id}`);
+    res = await twirl.get(`/solutions/user/${id}`);
     dispatch({ type: GET_USER_SOLUTION, payload: res.data });
   } catch (err) {
     dispatch({ type: GET_ERROR, payload: err });
@@ -85,7 +91,7 @@ export const editSolution = (solutionId, formValues) => async (dispatch) => {
   let res;
   try {
     res = await twirl.put(`/solutions/edit/${solutionId}`, formValues);
-    dispatch({ type: EDIT_SOLUTIONS, payload: res.data });
+    dispatch({ type: EDIT_SOLUTION, payload: res.data });
     history.push(`/solution/${res.data.id}`);
   } catch (err) {
     dispatch({ type: POST_ERROR, payload: err });
@@ -99,5 +105,70 @@ export const deleteSolution = (solutionId) => async (dispatch) => {
     history.push("/");
   } catch (err) {
     dispatch({ type: POST_ERROR, payload: err });
+  }
+};
+
+//============================= PROBLEMS ===================================
+
+export const createProblem = (formValues) => async (dispatch) => {
+  try {
+    const res = await twirl.post(`/problems`, formValues);
+    dispatch({ type: CREATE_PROBLEM, payload: res.data });
+
+    history.push(`/problem/${res.data.id}`);
+  } catch (err) {
+    dispatch({ type: POST_ERROR, payload: err });
+  }
+};
+
+export const getProblem = (solutionId) => async (dispatch) => {
+  try {
+    const res = await twirl.get(`/problems/${solutionId}`);
+    dispatch({ type: GET_PROBLEM, payload: res.data });
+  } catch (err) {
+    dispatch({ type: GET_ERROR, payload: err });
+  }
+};
+
+export const getProblems = () => async (dispatch) => {
+  let res;
+  try {
+    res = await twirl.get("/problems");
+    dispatch({ type: GET_PROBLEMS, payload: res.data });
+  } catch (err) {
+    dispatch({ type: GET_ERROR, payload: err });
+  }
+};
+
+export const editProblem = (problemId, formValues) => async (dispatch) => {
+  console.log(formValues);
+  let res;
+  try {
+    res = await twirl.put(`/problems/edit/${problemId}`, formValues);
+    dispatch({ type: EDIT_PROBLEM, payload: res.data });
+    history.push(`/problem/${res.data.id}`);
+  } catch (err) {
+    dispatch({ type: POST_ERROR, payload: err });
+  }
+};
+
+export const createSolutionProblem =
+  (formValues, problemId) => async (dispatch) => {
+    try {
+      const res = await twirl.post(`/solutions/${problemId}`, formValues);
+      dispatch({ type: CREATE_SOLUTION_PROBLEM, payload: res.data });
+      history.push(`/solution/${res.data.id}`);
+    } catch (err) {
+      dispatch({ type: POST_ERROR, payload: err });
+    }
+  };
+
+export const getUserProblems = (userId) => async (dispatch) => {
+  try {
+    const res = await twirl.get(`/problems/user/${userId}`);
+
+    dispatch({ type: GET_USER_PROBLEMS, payload: res.data });
+  } catch (err) {
+    dispatch({ type: GET_ERROR, payload: err });
   }
 };

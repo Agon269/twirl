@@ -76,8 +76,8 @@ const CommentForm = ({ user, solution, onSubmit }) => {
                   mt={4}
                   disabled={props.errors.comment}
                   label={"Submit"}
-                  light={"blue.700"}
-                  dark={"blue.500"}
+                  light={"purple.700"}
+                  dark={"purple.500"}
                   size={"md"}
                 />
               </Stack>

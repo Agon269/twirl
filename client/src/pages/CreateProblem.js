@@ -1,35 +1,15 @@
 import React from "react";
-import SolutionForm from "../components/SolutionForm";
 import { connect } from "react-redux";
 import { Box, Center, Heading } from "@chakra-ui/react";
-import app from "../firebase";
 import { useToast } from "@chakra-ui/toast";
+import { createProblem } from "../actions/index";
+import ProblemForm from "../components/ProblemForm";
 
-import { createSolution } from "../actions/index";
-
-const CreateSolution = ({ createSolution, error }) => {
+const CreateProblem = ({ createProblem, error }) => {
   const toast = useToast();
 
-  const upload = async (acceptedFiles) => {
-    let bucketName = "files";
-    let file = acceptedFiles;
-    let storageRef = app.storage().ref(`${bucketName}/${file.name}`);
-    await storageRef.put(file);
-    let download = await storageRef.getDownloadURL();
-    return download;
-  };
   const subHander = async (formVals) => {
-    try {
-      formVals.video = await upload(formVals.video);
-    } catch (err) {
-      toast({
-        title: err.message,
-        status: "error",
-        duration: 2000,
-        isClosable: true,
-      });
-    }
-    createSolution(formVals);
+    createProblem(formVals);
   };
   if (error) {
     toast({
@@ -39,9 +19,10 @@ const CreateSolution = ({ createSolution, error }) => {
       isClosable: true,
     });
   }
+
   return (
     <>
-      <Heading textAlign={"center"}>Create a solution</Heading>
+      <Heading textAlign={"center"}>Create a problem</Heading>
 
       <Center py={"6"}>
         <Box
@@ -53,9 +34,10 @@ const CreateSolution = ({ createSolution, error }) => {
           overflow="hidden"
         >
           <Box m="5">
-            <SolutionForm
+            <ProblemForm
               onSubmit={subHander}
               initialValues={{
+                title: "",
                 description: "",
                 category: "",
               }}
@@ -72,4 +54,4 @@ const mapStateToPropos = (state) => {
   return { error: state.error };
 };
 
-export default connect(mapStateToPropos, { createSolution })(CreateSolution);
+export default connect(mapStateToPropos, { createProblem })(CreateProblem);

@@ -5,10 +5,11 @@ import { Box, Center, Heading } from "@chakra-ui/react";
 import app from "../firebase";
 import { useToast } from "@chakra-ui/toast";
 
-import { createSolution } from "../actions/index";
+import { createSolutionProblem } from "../actions/index";
 
-const CreateSolution = ({ createSolution, error }) => {
+const SFP = ({ createSolutionProblem, error, match }) => {
   const toast = useToast();
+  const { id } = match.params;
 
   const upload = async (acceptedFiles) => {
     let bucketName = "files";
@@ -29,7 +30,7 @@ const CreateSolution = ({ createSolution, error }) => {
         isClosable: true,
       });
     }
-    createSolution(formVals);
+    createSolutionProblem(formVals, id);
   };
   if (error) {
     toast({
@@ -56,8 +57,8 @@ const CreateSolution = ({ createSolution, error }) => {
             <SolutionForm
               onSubmit={subHander}
               initialValues={{
+                title: "",
                 description: "",
-                category: "",
               }}
               type={"create"}
             />
@@ -72,4 +73,4 @@ const mapStateToPropos = (state) => {
   return { error: state.error };
 };
 
-export default connect(mapStateToPropos, { createSolution })(CreateSolution);
+export default connect(mapStateToPropos, { createSolutionProblem })(SFP);

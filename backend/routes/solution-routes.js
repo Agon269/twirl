@@ -5,17 +5,13 @@ const solutionControllers = require("../controller/solutions-controller");
 const { check } = require("express-validator");
 
 router.post(
-  "/",
+  "/:id",
   requireAuth,
-  [
-    check("title").not().isEmpty(),
-    check("description").not().isEmpty(),
-    check("category").not().isEmpty(),
-  ],
-  solutionControllers.createsolution
+  [check("description").not().isEmpty(), check("video").not().isEmpty()],
+  solutionControllers.createsol
 );
-
 router.get("/:id", solutionControllers.showsolution);
+
 router.get("/", solutionControllers.getsolutions);
 
 router.post("/comment/:id", requireAuth, solutionControllers.createcomment);

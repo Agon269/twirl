@@ -12,7 +12,6 @@ const MyButton = ({
   loading,
   loadingText,
   disabled,
-  variant,
 }) => {
   return (
     <Button
@@ -28,7 +27,6 @@ const MyButton = ({
       loadingText={loadingText}
       size={size}
       disabled={disabled}
-      variant={variant}
     >
       {label}
     </Button>

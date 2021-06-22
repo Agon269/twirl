@@ -4,11 +4,13 @@ import { withRouter } from "react-router-dom";
 import AuthForm from "../components/AuthForm";
 import twirl from "../api/twirl";
 import { useToast } from "@chakra-ui/toast";
+import { Redirect } from "react-router-dom";
 
 import { Box, Center, Heading } from "@chakra-ui/react";
 
 const Signin = ({ history }) => {
-  const { onAuthChange } = useContext(AuthContext);
+  const { onAuthChange, currentUser } = useContext(AuthContext);
+
   const toast = useToast();
 
   const subHandler = async (formVals) => {
@@ -32,6 +34,9 @@ const Signin = ({ history }) => {
       });
     }
   };
+  if (currentUser) {
+    return <Redirect to="/" />;
+  }
   return (
     <>
       <Heading textAlign={"center"}>Sign in</Heading>

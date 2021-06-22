@@ -1,10 +1,12 @@
 const { validationResult } = require("express-validator");
 const HttpError = require("../models/error");
+const Problem = require("../models/problem");
 const Solution = require("../models/solution");
 const User = require("../models/user");
+const { thumbs } = require("../models/thumbnails");
 
-//============================================== CREATE SOLUTION ===================================
-const createsolution = async (req, res, next) => {
+//======================================== CREATE SOLUTION FOR PROBLEM ===========================
+const createsol = async (req, res, next) => {
   const errors = validationResult(req);
 
   if (!errors.isEmpty()) {
@@ -12,8 +14,19 @@ const createsolution = async (req, res, next) => {
     return next(error);
   }
 
-  const { title, description, video } = req.body;
+  const { description, video } = req.body;
   const { id } = req.user;
+
+  let problem;
+  try {
+    problem = await Problem.findById(req.params.id);
+  } catch (err) {
+    const error = new HttpError(
+      "Sorry something went wrong couldn't access the database",
+      500
+    );
+    return next(error);
+  }
 
   let user;
   try {
@@ -27,30 +40,30 @@ const createsolution = async (req, res, next) => {
   }
 
   const solution = new Solution({
-    title,
     description,
     video,
     comments: [],
+    user,
+    problem,
+    thumbnail: thumbs[problem.category],
   });
-  solution.user = user;
 
   try {
-    solution.save();
+    await solution.save();
+    problem.solutions.push(solution);
+    await problem.save();
+    res.send(solution);
   } catch (err) {
-    const error = new HttpError(
-      "Sorry something went wrong couldn't access the database",
-      500
-    );
-    return next(error);
+    console.log(err);
   }
-
-  res.send(solution);
 };
 //========================================GET ONE SOLUTION =======================================
 const showsolution = async (req, res, next) => {
   let solution;
   try {
-    solution = await Solution.findById({ _id: req.params.id }).populate("user");
+    solution = await Solution.findById({ _id: req.params.id })
+      .populate("user")
+      .populate("problem");
   } catch (err) {
     const error = new HttpError("Couldn't find solution", 400);
     return next(error);
@@ -63,7 +76,9 @@ const createcomment = async (req, res, next) => {
   const { userId, comment } = req.body;
   let solution;
   try {
-    solution = await Solution.findById({ _id: req.params.id }).populate("user");
+    solution = await Solution.findById({ _id: req.params.id })
+      .populate("user")
+      .populate("problem");
   } catch (err) {
     const error = new HttpError(
       "Sorry something went wrong couldnt access the database",
@@ -112,7 +127,9 @@ const editsolution = async (req, res, next) => {
 
   let solution;
   try {
-    solution = await Solution.findById({ _id: req.params.id }).populate("user");
+    solution = await Solution.findById({ _id: req.params.id })
+      .populate("user")
+      .populate("problem");
   } catch (err) {
     const error = new HttpError(
       "Sorry something went wrong couldnt edit the solution",
@@ -139,12 +156,9 @@ const editsolution = async (req, res, next) => {
 const getsolutions = async (req, res, next) => {
   let solutions;
   try {
-    solutions = await Solution.find().populate("user");
+    solutions = await Solution.find().populate("user").populate("problem");
   } catch (err) {
-    const error = new HttpError(
-      "something went wrong couldnt sign you up",
-      500
-    );
+    const error = new HttpError("Smething went wrong", 500);
     return next(error);
   }
 
@@ -155,7 +169,9 @@ const getsolutions = async (req, res, next) => {
 const deletesolution = async (req, res, next) => {
   let solution;
   try {
-    solution = await Solution.findById({ _id: req.params.id }).populate("user");
+    solution = await Solution.findById({ _id: req.params.id })
+      .populate("user")
+      .populate("problem");
   } catch (err) {
     const error = new HttpError("Sorry something went wrong.", 500);
     return next(error);
@@ -183,7 +199,9 @@ const deletesolution = async (req, res, next) => {
 const usersolutions = async (req, res, next) => {
   let solutions;
   try {
-    solutions = await Solution.find({ user: req.params.id }).populate("user");
+    solutions = await Solution.find({ user: req.params.id })
+      .populate("user")
+      .populate("problem");
   } catch (err) {
     const error = new HttpError("Sorry something went wrong.", 500);
     return next(error);
@@ -192,10 +210,10 @@ const usersolutions = async (req, res, next) => {
   res.send(solutions);
 };
 
-exports.createsolution = createsolution;
 exports.showsolution = showsolution;
 exports.createcomment = createcomment;
 exports.editsolution = editsolution;
 exports.getsolutions = getsolutions;
 exports.deletesolution = deletesolution;
 exports.usersolutions = usersolutions;
+exports.createsol = createsol;

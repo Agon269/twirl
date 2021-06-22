@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { Box, SimpleGrid, Heading } from "@chakra-ui/layout";
 import { connect } from "react-redux";
 import { getSolutions } from "../actions/index";
-
+import Loading from "../components/Loading";
 import SolutionCard from "../components/SolutionCard";
 
 const Home = ({ getSolutions, solutions, error }) => {
@@ -15,7 +15,7 @@ const Home = ({ getSolutions, solutions, error }) => {
   }
 
   if (solutions.length === 0) {
-    return <div>Loading...</div>;
+    return <Loading />;
   }
 
   const renderSolutions = solutions.reverse().map((sol) => {
@@ -23,11 +23,11 @@ const Home = ({ getSolutions, solutions, error }) => {
   });
 
   return (
-    <Box p={4}>
+    <Box p={8}>
       <Heading m={"4"} size={"xl"} mb={"8"}>
         Solutions
       </Heading>
-      <SimpleGrid columns={[1, 2, 3, 4]} spacing={12}>
+      <SimpleGrid columns={[1, 2, 3, 4, 5]} spacing={12}>
         {renderSolutions}
       </SimpleGrid>
     </Box>
@@ -36,7 +36,7 @@ const Home = ({ getSolutions, solutions, error }) => {
 
 const mapStateToPropos = (state) => {
   let sols = Object.values(state.solutions);
-  sols.reverse();
+
   return { solutions: sols, error: state.error };
 };
 

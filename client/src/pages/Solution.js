@@ -1,7 +1,7 @@
 import React, { useEffect, useContext } from "react";
 import { connect } from "react-redux";
 import { getSolution, createComment } from "../actions/index";
-import { Box, Center, Text, SimpleGrid, Divider, Link } from "@chakra-ui/react";
+import { Box, Text, SimpleGrid, Divider, Link, Center } from "@chakra-ui/react";
 import { Link as RouterLink } from "react-router-dom";
 import { AuthContext } from "../Auth";
 import CommentForm from "../components/CommentForm";
@@ -10,6 +10,8 @@ import SolutionDetail from "../components/SolutionDetail";
 import MyButton from "../components/MyButton";
 import DeleteModal from "../components/DeleteModal";
 import { useToast } from "@chakra-ui/toast";
+
+import Loading from "../components/Loading";
 
 const Solution = ({ getSolution, solution, match, createComment, error }) => {
   const toast = useToast();
@@ -34,7 +36,7 @@ const Solution = ({ getSolution, solution, match, createComment, error }) => {
     return <div>Error</div>;
   }
   if (!solution) {
-    return <div>Loading...</div>;
+    return <Loading />;
   }
   if (error) {
     toast({
@@ -45,19 +47,19 @@ const Solution = ({ getSolution, solution, match, createComment, error }) => {
     });
   }
   const owner = currentUser?.id === solution.user.id;
+  let problem = solution.problem;
 
   return (
-    <>
-      <Center p={6}>
+    <Center>
+      <Box p={8}>
         <SimpleGrid>
           <Box maxW={"3xl"} w={"full"} borderRadius={"lg"} overflow="hidden">
-            <video width="800" height="240" controls>
-              <source src={solution.video} />
-              Your browser does not support the video tag.
-            </video>
+            <video width="800" height="240" controls src={solution.video} />
           </Box>
           <Box pt={2}>
-            <Text fontSize={"3xl"}>{solution.title}</Text>
+            <Text fontSize={"3xl"} mb={4}>
+              {problem.title}
+            </Text>
             {owner ? (
               <>
                 <Link
@@ -73,9 +75,8 @@ const Solution = ({ getSolution, solution, match, createComment, error }) => {
                   <MyButton
                     label={"Edit"}
                     size={"md"}
-                    variant={"outline"}
-                    light={"blue.700"}
-                    dark={"blue.500"}
+                    light={"purple.700"}
+                    dark={"purple.500"}
                   />
                 </Link>
 
@@ -85,10 +86,10 @@ const Solution = ({ getSolution, solution, match, createComment, error }) => {
               ""
             )}
           </Box>
-          <Divider />
+          <Divider mt={2} />
           {/**this is where owner is shown */}
           <Box pt={8} pb={6} maxW={"2xl"}>
-            <SolutionDetail solution={solution} />
+            <SolutionDetail solution={solution} problem={problem} />
           </Box>
           <Divider />
           {/**this is where current user is shown */}
@@ -103,8 +104,8 @@ const Solution = ({ getSolution, solution, match, createComment, error }) => {
             <Comment comments={solution.comments} />
           </Box>
         </SimpleGrid>
-      </Center>
-    </>
+      </Box>
+    </Center>
   );
 };
 const mapStateToProps = (state, ownProps) => {

@@ -1,28 +1,24 @@
 const mongoose = require("mongoose");
 
-const solutionSchema = new mongoose.Schema(
+const problemSchema = new mongoose.Schema(
   {
+    title: {
+      type: String,
+      required: true,
+    },
     description: {
       type: String,
       required: true,
     },
-    video: {
-      type: String,
-      required: true,
-    },
-    comments: {
-      type: Array,
-    },
     category: {
       type: String,
     },
-    thumbnail: {
-      type: String,
-    },
-    problem: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Problem",
-    },
+    solutions: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Solution",
+      },
+    ],
     user: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
@@ -39,6 +35,6 @@ const solutionSchema = new mongoose.Schema(
   }
 );
 
-const Solution = mongoose.model("Solution", solutionSchema);
+const Problem = mongoose.model("Problem", problemSchema);
 
-module.exports = Solution;
+module.exports = Problem;

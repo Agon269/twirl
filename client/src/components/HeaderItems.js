@@ -43,6 +43,19 @@ const HeaderItems = ({ isOpen, currentUser, onAuthChange }) => {
         >
           Home
         </Link>
+        <Link
+          as={RouterLink}
+          to="/problems"
+          _hover={{
+            textDecoration: "none",
+            cursor: "pointer",
+          }}
+          _focus={{
+            outlineColor: "transparent",
+          }}
+        >
+          Problems
+        </Link>
         <Stack direction={["column", "row", "row", "row"]}>
           {buttons(currentUser, onAuthChange)}
         </Stack>
@@ -98,20 +111,18 @@ const buttons = (currentUser, onAuthChange) => {
                 routeTo(`/user/${currentUser.id}`);
               }}
             >
-              My Solutions
+              My Account
             </MenuItem>
+
             <MenuItem
               onClick={() => {
-                routeTo("/createsolution");
+                routeTo("/createproblem");
               }}
             >
-              Create Solution
+              Create problem
             </MenuItem>
             <MenuDivider />
-            <MenuItem onClick={() => onAuthChange()}>
-              Signout
-              {/* <Signout /> */}
-            </MenuItem>
+            <MenuItem onClick={() => onAuthChange()}>Signout</MenuItem>
           </MenuList>
         </Portal>
       </Menu>
