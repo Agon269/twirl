@@ -11,6 +11,10 @@ const MyBadge = ({ category }) => {
     color = "blue";
   } else if (category === "C++") {
     color = "teal";
+  } else if (category === "C") {
+    color = "yellow";
+  } else if (category === "any") {
+    color = "green";
   } else {
     color = "gray";
   }

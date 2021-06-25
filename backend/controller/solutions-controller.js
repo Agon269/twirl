@@ -30,7 +30,7 @@ const createsol = async (req, res, next) => {
 
   let user;
   try {
-    user = await User.findOne({ _id: id });
+    user = await User.findById(id);
   } catch (err) {
     const error = new HttpError(
       "Sorry something went wrong couldn't access the database",
@@ -48,14 +48,9 @@ const createsol = async (req, res, next) => {
     thumbnail: thumbs[problem.category],
   });
 
-  try {
-    await solution.save();
-    problem.solutions.push(solution);
-    await problem.save();
-    res.send(solution);
-  } catch (err) {
-    console.log(err);
-  }
+  await solution.save();
+
+  res.send(solution);
 };
 //========================================GET ONE SOLUTION =======================================
 const showsolution = async (req, res, next) => {

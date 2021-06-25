@@ -1,12 +1,13 @@
-import React from "react";
+import React from 'react'
 import {
-  Box,Button,Center, Heading,Text
-} from "@chakra-ui/react"
+    Box,Button,Center, Heading,Text
+  } from "@chakra-ui/react"
 import { withRouter } from "react-router-dom";
-const Error404 = ({history})=>
- {
-  return(
-    <Center py={6}>
+
+const Error = ({err,history})=> {
+
+    return (
+<Center py={6}>
       <Box 
           maxW={"2xl"}
           w={"full"}
@@ -16,10 +17,12 @@ const Error404 = ({history})=>
           borderWidth={"2px"}
           p={8}>
         <Heading color={"red"}>Error</Heading>
-        <Text pt={4}>Error 404</Text>
+        <Text pt={4}>{err}</Text>
         <Button mt={8} colorScheme={"teal"} onClick={()=>{history.push("/")}}>Go home</Button>
       </Box>
 </Center>
-  );
+    )
 }
-export default withRouter (Error404)
+
+
+export default withRouter(Error) ;

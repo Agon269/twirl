@@ -15,11 +15,11 @@ const Signin = ({ history }) => {
 
   const subHandler = async (formVals) => {
     try {
-      await twirl.post("/user/signin", {
+      let user = await twirl.post("/user/signin", {
         userName: formVals.userName,
         password: formVals.password,
       });
-      onAuthChange();
+      onAuthChange(user.data.token);
       history.goBack();
     } catch (err) {
       console.log(err);

@@ -104,8 +104,8 @@ const AuthForm = ({ onSubmit }) => {
                 label={"Submit"}
                 size={"md"}
                 variant={"outline"}
-                light={"blue.700"}
-                dark={"blue.500"}
+                light={"purple.700"}
+                dark={"purple.500"}
                 type={"submit"}
                 disabled={props.isSubmitting === true ? true : false}
                 loading={props.isSubmitting === true ? true : false}

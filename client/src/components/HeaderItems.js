@@ -92,8 +92,8 @@ const buttons = (currentUser, onAuthChange) => {
             label={"Sign up"}
             size={"sm"}
             variant={"outline"}
-            light={"blue.700"}
-            dark={"blue.500"}
+            light={"purple.700"}
+            dark={"purple.500"}
           />
         </span>
       </>

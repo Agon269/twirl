@@ -1,3 +1,7 @@
+.video {
+  width: 4000px;
+}
+
 .solution {
   position: relative;
   display: inline-block;

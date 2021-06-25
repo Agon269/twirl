@@ -10,7 +10,7 @@ import SolutionDetail from "../components/SolutionDetail";
 import MyButton from "../components/MyButton";
 import DeleteModal from "../components/DeleteModal";
 import { useToast } from "@chakra-ui/toast";
-
+import Error from "../components/Error";
 import Loading from "../components/Loading";
 
 const Solution = ({ getSolution, solution, match, createComment, error }) => {
@@ -33,7 +33,7 @@ const Solution = ({ getSolution, solution, match, createComment, error }) => {
     createComment(commentParams);
   };
   if (error && !solution) {
-    return <div>Error</div>;
+    return <Error err={error} />;
   }
   if (!solution) {
     return <Loading />;

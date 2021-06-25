@@ -66,10 +66,12 @@ const ProblemForm = ({ onSubmit, initialValues }) => {
                   id="category"
                   {...field}
                 >
-                  <option value="Javascript">Javascript</option>
-                  <option value="java">java</option>
-                  <option value="Python">Python</option>
                   <option value="C++">C++</option>
+                  <option value="C">C</option>
+                  <option value="java">java</option>
+                  <option value="Javascript">Javascript</option>
+                  <option value="Python">Python</option>
+                  <option value="any">Any</option>
                 </Select>
                 <FormErrorMessage>{form.errors.category}</FormErrorMessage>
               </FormControl>

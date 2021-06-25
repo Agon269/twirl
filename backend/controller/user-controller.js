@@ -5,7 +5,6 @@ const bcrypt = require("bcrypt");
 const User = require("../models/user");
 const HttpError = require("../models/error");
 const { avatars } = require("../models/avatars");
-const { banners } = require("../models/banners");
 const signJwt = (id, userName, avatar) => {
   return jwt.sign({ id, userName, avatar }, process.env.JWT_KEY);
 };
@@ -58,7 +57,8 @@ const signup = async (req, res, next) => {
     userName,
     password: newPassword,
     avatar: avatars[Math.floor(Math.random() * avatars.length)],
-    banner: (banner = banners[Math.floor(Math.random() * banners.length)]),
+    banner:
+      "https://res.cloudinary.com/dvfihlcxd/image/upload/v1623527245/79731568097599.5b50bca477735_gqynry.jpg",
   });
 
   try {

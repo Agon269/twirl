@@ -5,6 +5,7 @@ import { Image, Avatar, Text, Divider } from "@chakra-ui/react";
 import { getUsersSolutions, getUser, getUserProblems } from "../actions/index";
 import UserSolutions from "../components/UserSolutions";
 import UserProblems from "../components/UserProblems";
+import Error from "../components/Error"
 import Loading from "../components/Loading";
 const User = ({
   match,
@@ -26,7 +27,7 @@ const User = ({
   }, [getUserProblems, getUsersSolutions, id, getUser]);
 
   if (error && (isEmpty(solutions) || isEmpty(user))) {
-    return <div>Error.</div>;
+    return <Error err={error}/> ;
   }
   if (isEmpty(user) || isEmpty(solutions)) {
     return <Loading />;

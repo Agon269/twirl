@@ -14,12 +14,12 @@ const Signup = ({ history }) => {
 
   const subHandler = async (formVals) => {
     try {
-      await twirl.post("/user/signup", {
+      let user = await twirl.post("/user/signup", {
         userName: formVals.userName,
         password: formVals.password,
       });
 
-      onAuthChange();
+      onAuthChange(user.data.token);
       history.goBack();
     } catch (err) {
       toast({

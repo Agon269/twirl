@@ -13,12 +13,6 @@ const problemSchema = new mongoose.Schema(
     category: {
       type: String,
     },
-    solutions: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Solution",
-      },
-    ],
     user: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",

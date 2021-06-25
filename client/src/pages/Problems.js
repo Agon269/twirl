@@ -5,6 +5,7 @@ import { getProblems } from "../actions/index";
 import { Link as RouterLink } from "react-router-dom";
 import { Text, Heading, Center } from "@chakra-ui/react";
 import MyBadge from "../components/MyBadge";
+import Error from "../components/Error"
 import Loading from "../components/Loading";
 
 const Home = ({ getProblems, problems, error }) => {
@@ -13,7 +14,7 @@ const Home = ({ getProblems, problems, error }) => {
   }, [getProblems]);
 
   if (error && problems.length === 0) {
-    return <div>Error</div>;
+    return <Error err={error} /> ;
   }
 
   if (problems.length === 0) {
