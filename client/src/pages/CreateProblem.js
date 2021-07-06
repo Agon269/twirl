@@ -1,15 +1,17 @@
-import React from "react";
+import React, { useContext } from "react";
 import { connect } from "react-redux";
 import { Box, Center, Heading } from "@chakra-ui/react";
 import { useToast } from "@chakra-ui/toast";
 import { createProblem } from "../actions/index";
 import ProblemForm from "../components/ProblemForm";
+import { AuthContext } from "../Auth";
 
 const CreateProblem = ({ createProblem, error }) => {
   const toast = useToast();
+  const { token } = useContext(AuthContext);
 
   const subHander = async (formVals) => {
-    createProblem(formVals);
+    createProblem(formVals, token);
   };
   if (error) {
     toast({

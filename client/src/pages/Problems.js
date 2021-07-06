@@ -5,7 +5,7 @@ import { getProblems } from "../actions/index";
 import { Link as RouterLink } from "react-router-dom";
 import { Text, Heading, Center } from "@chakra-ui/react";
 import MyBadge from "../components/MyBadge";
-import Error from "../components/Error"
+import Error from "../components/Error";
 import Loading from "../components/Loading";
 
 const Home = ({ getProblems, problems, error }) => {
@@ -14,7 +14,7 @@ const Home = ({ getProblems, problems, error }) => {
   }, [getProblems]);
 
   if (error && problems.length === 0) {
-    return <Error err={error} /> ;
+    return <Error err={error} />;
   }
 
   if (problems.length === 0) {
@@ -48,8 +48,8 @@ const Home = ({ getProblems, problems, error }) => {
     );
   });
   return (
-    <Center>
-      <Box>
+    <Center p={4}>
+      <Box maxW={"2xl"} w={"full"} mb={4}>
         <Heading m={"4"} size={"xl"}>
           Problems Board
         </Heading>

@@ -35,7 +35,7 @@ const Home = ({ getSolutions, solutions, error }) => {
 
   return (
     <>
-      <Center>
+      <Center p={4}>
         <SimpleGrid columns={[0, 1, 2]} spacing={4}>
           <Stack direction={"column"}>
             <Box>

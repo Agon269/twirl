@@ -16,7 +16,7 @@ const EditSolution = ({
 }) => {
   const toast = useToast();
 
-  const { currentUser } = useContext(AuthContext);
+  const { currentUser, token } = useContext(AuthContext);
 
   const { id } = match.params;
 
@@ -25,7 +25,7 @@ const EditSolution = ({
   }, [getSolution, id]);
 
   const subHander = async (formVals) => {
-    editSolution(solution.id, formVals);
+    editSolution(solution.id, formVals, token);
   };
 
   if (!solution) {

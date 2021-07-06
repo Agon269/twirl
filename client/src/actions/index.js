@@ -1,6 +1,5 @@
 import twirl from "../api/twirl";
 import {
-  CREATE_SOLUTION,
   EDIT_SOLUTION,
   DELETE_SOLUTION,
   GET_SOLUTION,
@@ -16,19 +15,14 @@ import {
   EDIT_PROBLEM,
   CREATE_SOLUTION_PROBLEM,
   GET_USER_PROBLEMS,
+  GET_PROBLEM_SOLUTIONS,
 } from "./types";
 import history from "../history";
+import axios from "axios";
 
-export const createSolution = (formValues) => async (dispatch) => {
-  let res;
-  try {
-    res = await twirl.post("/solutions", formValues);
-    dispatch({ type: CREATE_SOLUTION, payload: res.data });
-    history.push(`/solution/${res.data.id}`);
-  } catch (err) {
-    dispatch({ type: POST_ERROR, payload: err });
-  }
-};
+// let localApi = "http://localhost:5000/api";
+// let deplApi = "https://frozen-taiga-24724.herokuapp.com/api";
+const BASE_URL = "https://frozen-taiga-24724.herokuapp.com/api";
 
 export const getSolution = (solutionId) => async (dispatch) => {
   let res;
@@ -44,13 +38,15 @@ export const getSolution = (solutionId) => async (dispatch) => {
   }
 };
 
-export const createComment = (commentParams) => async (dispatch) => {
+export const createComment = (commentParams, token) => async (dispatch) => {
   let res;
   try {
-    res = await twirl.post(
-      `/solutions/comment/${commentParams.solutionId}`,
-      commentParams
-    );
+    res = await axios({
+      method: "post",
+      url: `${BASE_URL}/solutions/comment/${commentParams.solutionId}`,
+      data: { ...commentParams },
+      headers: { user: token },
+    });
     dispatch({ type: CREATE_COMMENT, payload: res.data });
   } catch (err) {
     dispatch({ type: POST_ERROR, payload: err });
@@ -87,36 +83,53 @@ export const getUser = (id) => async (dispatch) => {
   }
 };
 
-export const editSolution = (solutionId, formValues) => async (dispatch) => {
-  let res;
-  try {
-    res = await twirl.put(`/solutions/edit/${solutionId}`, formValues);
-    dispatch({ type: EDIT_SOLUTION, payload: res.data });
-    history.push(`/solution/${res.data.id}`);
-  } catch (err) {
-    dispatch({ type: POST_ERROR, payload: err });
-  }
-};
+export const editSolution =
+  (solutionId, formValues, token) => async (dispatch) => {
+    let res;
+    try {
+      res = await axios({
+        method: "put",
+        url: `${BASE_URL}/solutions/edit/${solutionId}`,
+        data: { ...formValues },
+        headers: { user: token },
+      });
+      dispatch({ type: EDIT_SOLUTION, payload: res.data });
+      history.push(`/solution/${res.data.id}`);
+    } catch (err) {
+      dispatch({ type: POST_ERROR, payload: err });
+    }
+  };
 
-export const deleteSolution = (solutionId) => async (dispatch) => {
+export const deleteSolution = (solutionId, token) => async (dispatch) => {
   try {
-    await twirl.delete(`/solutions/${solutionId}`);
+    await axios({
+      method: "delete",
+      url: `${BASE_URL}/solutions/${solutionId}`,
+
+      headers: { user: token },
+    });
     dispatch({ type: DELETE_SOLUTION, payload: solutionId });
     history.push("/");
   } catch (err) {
+    console.log("failed");
     dispatch({ type: POST_ERROR, payload: err });
   }
 };
 
 //============================= PROBLEMS ===================================
 
-export const createProblem = (formValues) => async (dispatch) => {
+export const createProblem = (formValues, token) => async (dispatch) => {
   try {
-    const res = await twirl.post(`/problems`, formValues);
+    const res = await axios({
+      method: "post",
+      url: `${BASE_URL}/problems`,
+      data: { ...formValues },
+      headers: { user: token },
+    });
     dispatch({ type: CREATE_PROBLEM, payload: res.data });
-
     history.push(`/problem/${res.data.id}`);
   } catch (err) {
+    console.log("failed");
     dispatch({ type: POST_ERROR, payload: err });
   }
 };
@@ -140,25 +153,36 @@ export const getProblems = () => async (dispatch) => {
   }
 };
 
-export const editProblem = (problemId, formValues) => async (dispatch) => {
-  console.log(formValues);
-  let res;
-  try {
-    res = await twirl.put(`/problems/edit/${problemId}`, formValues);
-    dispatch({ type: EDIT_PROBLEM, payload: res.data });
-    history.push(`/problem/${res.data.id}`);
-  } catch (err) {
-    dispatch({ type: POST_ERROR, payload: err });
-  }
-};
+export const editProblem =
+  (problemId, formValues, token) => async (dispatch) => {
+    let res;
+    try {
+      res = await axios({
+        method: "put",
+        url: `${BASE_URL}/problems/edit/${problemId}`,
+        data: { ...formValues },
+        headers: { user: token },
+      });
+      dispatch({ type: EDIT_PROBLEM, payload: res.data });
+      history.push(`/problem/${res.data.id}`);
+    } catch (err) {
+      dispatch({ type: POST_ERROR, payload: err });
+    }
+  };
 
 export const createSolutionProblem =
-  (formValues, problemId) => async (dispatch) => {
+  (formValues, problemId, token) => async (dispatch) => {
     try {
-      const res = await twirl.post(`/solutions/${problemId}`, formValues);
+      const res = await axios({
+        method: "post",
+        url: `${BASE_URL}/solutions/${problemId}`,
+        data: { ...formValues },
+        headers: { user: token },
+      });
       dispatch({ type: CREATE_SOLUTION_PROBLEM, payload: res.data });
       history.push(`/solution/${res.data.id}`);
     } catch (err) {
+      console.log("failed");
       dispatch({ type: POST_ERROR, payload: err });
     }
   };
@@ -168,6 +192,17 @@ export const getUserProblems = (userId) => async (dispatch) => {
     const res = await twirl.get(`/problems/user/${userId}`);
 
     dispatch({ type: GET_USER_PROBLEMS, payload: res.data });
+  } catch (err) {
+    dispatch({ type: GET_ERROR, payload: err });
+  }
+};
+
+export const getProblemSolution = (id) => async (dispatch) => {
+  let res;
+  try {
+    res = await twirl.get(`/solutions/problem/${id}`);
+
+    dispatch({ type: GET_PROBLEM_SOLUTIONS, payload: res.data });
   } catch (err) {
     dispatch({ type: GET_ERROR, payload: err });
   }

@@ -1,15 +1,17 @@
-import React from "react";
+import React, { useContext } from "react";
 import SolutionForm from "../components/SolutionForm";
 import { connect } from "react-redux";
 import { Box, Center, Heading } from "@chakra-ui/react";
 import app from "../firebase";
 import { useToast } from "@chakra-ui/toast";
+import { AuthContext } from "../Auth";
 
 import { createSolutionProblem } from "../actions/index";
 
 const SFP = ({ createSolutionProblem, error, match }) => {
   const toast = useToast();
   const { id } = match.params;
+  const { token } = useContext(AuthContext);
 
   const upload = async (acceptedFiles) => {
     let bucketName = "files";
@@ -30,7 +32,7 @@ const SFP = ({ createSolutionProblem, error, match }) => {
         isClosable: true,
       });
     }
-    createSolutionProblem(formVals, id);
+    createSolutionProblem(formVals, id, token);
   };
   if (error) {
     toast({

@@ -10,7 +10,7 @@ import { useToast } from "@chakra-ui/toast";
 const EditSolution = ({ editProblem, getProblem, match, problem, error }) => {
   const toast = useToast();
 
-  const { currentUser } = useContext(AuthContext);
+  const { currentUser, token } = useContext(AuthContext);
 
   const { id } = match.params;
 
@@ -19,7 +19,7 @@ const EditSolution = ({ editProblem, getProblem, match, problem, error }) => {
   }, [getProblem, id]);
 
   const subHander = async (formVals) => {
-    editProblem(problem.id, formVals);
+    editProblem(problem.id, formVals, token);
   };
 
   if (!problem) {

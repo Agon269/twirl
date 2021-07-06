@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import {
   AlertDialog,
   AlertDialogBody,
@@ -9,17 +9,19 @@ import {
   Button,
 } from "@chakra-ui/react";
 import { connect } from "react-redux";
-
 import { deleteSolution } from "../actions";
+import { AuthContext } from "../Auth";
 
 const DeleteModal = ({ deleteSolution, solutionId }) => {
   const [isOpen, setIsOpen] = React.useState(false);
   const [isLoading, setIsLoading] = React.useState(false);
+  const { token } = useContext(AuthContext);
+
   const onClose = () => setIsOpen(false);
   const cancelRef = React.useRef();
   const handleDelete = (id) => {
     setIsLoading(true);
-    deleteSolution(id);
+    deleteSolution(id, token);
   };
 
   return (

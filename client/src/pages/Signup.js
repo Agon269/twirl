@@ -19,7 +19,7 @@ const Signup = ({ history }) => {
         password: formVals.password,
       });
 
-      onAuthChange(user.data.token);
+      await onAuthChange(user.data.token);
       history.goBack();
     } catch (err) {
       toast({

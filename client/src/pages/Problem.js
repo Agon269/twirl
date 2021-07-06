@@ -1,6 +1,6 @@
 import React, { useEffect, useContext } from "react";
 import { connect } from "react-redux";
-import { getProblem } from "../actions/index";
+import { getProblem, getProblemSolution } from "../actions/index";
 import {
   Box,
   Center,
@@ -14,14 +14,20 @@ import {
 import { Link as RouterLink } from "react-router-dom";
 import MyBadge from "../components/MyBadge";
 import Loading from "../components/Loading";
-
+import SolutionCard from "../components/SolutionCard";
 import { AuthContext } from "../Auth";
 import MyButton from "../components/MyButton";
-import DeleteModal from "../components/DeleteModal";
 import { useToast } from "@chakra-ui/toast";
 import Error from "../components/Error";
 
-const Problem = ({ getProblem, problem, match, error }) => {
+const Problem = ({
+  getProblem,
+  problem,
+  match,
+  error,
+  getProblemSolution,
+  solutions,
+}) => {
   const toast = useToast();
 
   const { currentUser } = useContext(AuthContext);
@@ -30,7 +36,8 @@ const Problem = ({ getProblem, problem, match, error }) => {
 
   useEffect(() => {
     getProblem(id);
-  }, [getProblem, id]);
+    getProblemSolution(id);
+  }, [getProblem, id, getProblemSolution]);
 
   if (error && !problem) {
     return <Error err={error} />;
@@ -47,7 +54,9 @@ const Problem = ({ getProblem, problem, match, error }) => {
     });
   }
   const owner = currentUser?.id === problem.user.id;
-
+  const renderSolutions = solutions.reverse().map((sol) => {
+    return <SolutionCard key={sol.id} sol={sol} />;
+  });
   return (
     <>
       <Center p={"4"}>
@@ -89,8 +98,6 @@ const Problem = ({ getProblem, problem, match, error }) => {
                       dark={"purple.500"}
                     />
                   </Link>
-
-                  <DeleteModal solutionId={problem.id} />
                 </>
               ) : (
                 ""
@@ -117,18 +124,25 @@ const Problem = ({ getProblem, problem, match, error }) => {
       <Box p={8}>
         <Heading>Solutions to this problem</Heading>
         <SimpleGrid columns={[1, 2, 3, 4]} spacing={12} p={12}>
-          {/**render solutions related to problem here */}
+          {renderSolutions}
         </SimpleGrid>
       </Box>
     </>
   );
 };
 const mapStateToProps = (state, ownProps) => {
+  let sols = Object.values(state.solutions);
+  let newSols = sols.filter(
+    (sol) => sol.problem.id === ownProps.match.params.id
+  );
+
   return {
     problem: state.problems[ownProps.match.params.id],
+    solutions: newSols,
     error: state.error,
   };
 };
 export default connect(mapStateToProps, {
   getProblem,
+  getProblemSolution,
 })(Problem);

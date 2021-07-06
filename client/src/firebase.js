@@ -4,12 +4,13 @@ import "firebase/auth";
 import "firebase/firestore";
 
 const app = firebase.initializeApp({
-  apiKey: "AIzaSyAPFtadxXKQ7OwQfLuBAQS--3t96UAplFU",
-  authDomain: "sream-me.firebaseapp.com",
-  projectId: "sream-me",
-  storageBucket: "sream-me.appspot.com",
-  messagingSenderId: "801265886072",
-  appId: "1:801265886072:web:2b6b69e4b6446df3735e8d",
+  apiKey: "AIzaSyBIgNiQvcXWJt-ONSqn1b7hhlGdi3kfX3w",
+  authDomain: "twirl-845f4.firebaseapp.com",
+  projectId: "twirl-845f4",
+  storageBucket: "twirl-845f4.appspot.com",
+  messagingSenderId: "646048467376",
+  appId: "1:646048467376:web:fc0d6c0b67bf5ced2bee75",
+  measurementId: "G-6WQECX3TL5",
 });
 // Initialize Firebase
 export default app;

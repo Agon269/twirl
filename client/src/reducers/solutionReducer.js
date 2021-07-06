@@ -7,6 +7,7 @@ import {
   GET_USER_SOLUTION,
   EDIT_SOLUTION,
   CREATE_SOLUTION_PROBLEM,
+  GET_PROBLEM_SOLUTIONS,
 } from "../actions/types";
 import _ from "lodash";
 
@@ -24,6 +25,8 @@ const solutionReducer = (state = {}, action) => {
       return { ...state, [action.payload.id]: action.payload };
     case CREATE_SOLUTION_PROBLEM:
       return { ...state, [action.payload.id]: action.payload };
+    case GET_PROBLEM_SOLUTIONS:
+      return { ...state, ..._.mapKeys(action.payload, "id") };
     case GET_USER_SOLUTION:
       return { ...state, ..._.mapKeys(action.payload, "id") };
     case DELETE_SOLUTION:

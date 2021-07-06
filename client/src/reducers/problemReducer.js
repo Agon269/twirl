@@ -19,6 +19,7 @@ const problemReducer = (state = {}, action) => {
       return { ...state, ..._.mapKeys(action.payload, "id") };
     case EDIT_PROBLEM:
       return { ...state, [action.payload.id]: action.payload };
+
     default:
       return state;
   }

@@ -5,12 +5,10 @@ import Signin from "./pages/Signin";
 import Signup from "./pages/Signup";
 import { AuthProvider } from "./Auth";
 import Solution from "./pages/Solution";
-// import Solutions from "./pages/Solutions";
 import EditSolution from "./pages/EditSolution";
 import User from "./pages/User";
 import Error404 from "./pages/Error404";
 import Header from "./components/Header";
-import CreateSolution from "./pages/CreateSolution";
 import ProtectedRoute from "./components/ProtectedRoute";
 import history from "./history";
 import CreateProblem from "./pages/CreateProblem";
@@ -32,11 +30,6 @@ export default function App() {
 
             <Route exact path="/signup" component={Signup} />
 
-            <ProtectedRoute
-              exact
-              path="/createsolution"
-              component={CreateSolution}
-            />
             <ProtectedRoute
               exact
               path="/createproblem"

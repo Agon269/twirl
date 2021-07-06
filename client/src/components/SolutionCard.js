@@ -1,4 +1,12 @@
-import { Avatar, Text, Image, Stack, LinkBox, Box } from "@chakra-ui/react";
+import {
+  Avatar,
+  Text,
+  Image,
+  Stack,
+  LinkBox,
+  Box,
+  Tooltip,
+} from "@chakra-ui/react";
 import "../styles/card.css";
 import React from "react";
 import history from "../history";
@@ -26,36 +34,42 @@ const SolutionCard = ({ sol }) => {
         />
       </LinkBox>
       <Stack direction={"row"}>
-        <Avatar
-          src={sol.user.avatar}
-          name="dogo"
-          _hover={{ cursor: "pointer" }}
-          onClick={() => {
-            routeToSol(`/user/${sol.user.id}`);
-          }}
-        />
-        <Stack>
-          <Text
-            onClick={() => {
-              routeToSol(`/solution/${sol.id}`);
-            }}
-            _hover={{ cursor: "pointer" }}
-            mb={"-2"}
-          >
-            {sol.problem.title}
-          </Text>
-          <Text
-            ml={"4"}
-            color={"gray.600"}
+        <Tooltip label={sol.user.userName} aria-label="A tooltip">
+          <Avatar
+            src={sol.user.avatar}
+            name={sol.user.userName}
             _hover={{ cursor: "pointer" }}
             onClick={() => {
               routeToSol(`/user/${sol.user.id}`);
             }}
-            w={"min-content"}
-            fontSize={"sm"}
-          >
-            {sol.user.userName}
-          </Text>
+          />
+        </Tooltip>
+        <Stack>
+          <Tooltip label={sol.problem.title} aria-label="A tooltip">
+            <Text
+              onClick={() => {
+                routeToSol(`/solution/${sol.id}`);
+              }}
+              _hover={{ cursor: "pointer" }}
+              mb={"-2"}
+            >
+              {sol.problem.title}
+            </Text>
+          </Tooltip>
+          <Tooltip label={sol.user.userName} aria-label="A tooltip">
+            <Text
+              ml={"4"}
+              color={"gray.600"}
+              _hover={{ cursor: "pointer" }}
+              onClick={() => {
+                routeToSol(`/user/${sol.user.id}`);
+              }}
+              w={"min-content"}
+              fontSize={"sm"}
+            >
+              {sol.user.userName}
+            </Text>
+          </Tooltip>
         </Stack>
       </Stack>
     </Box>

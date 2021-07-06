@@ -6,8 +6,14 @@ const cookieSession = require("cookie-session");
 const cors = require("cors");
 
 const app = express();
-
-app.use(cors({ origin: "http://localhost:3000", credentials: true }));
+let local = "http://localhost:3000";
+let global = "https://twirl-845f4.web.app";
+app.use(
+  cors({
+    origin: local,
+    credentials: true,
+  })
+);
 
 app.use(json());
 app.use(
@@ -35,6 +41,8 @@ app.use((error, req, res, next) => {
     .json({ message: error.message || "An unkown error occurred" });
 });
 
+let port = process.env.PORT || 5000;
+
 mongoose
   .connect(
     "mongodb+srv://dev1:bb1sJ7OZGppw82aC@streamy-dev.at6ng.mongodb.net/streamydev1?retryWrites=true&w=majority",
@@ -45,7 +53,7 @@ mongoose
     }
   )
   .then(() => {
-    app.listen(5000, () => {
+    app.listen(port, () => {
       console.log("server started");
     });
   })

@@ -12,11 +12,12 @@ import DeleteModal from "../components/DeleteModal";
 import { useToast } from "@chakra-ui/toast";
 import Error from "../components/Error";
 import Loading from "../components/Loading";
+import ComingSoon from "../components/ComingSoon";
 
 const Solution = ({ getSolution, solution, match, createComment, error }) => {
   const toast = useToast();
 
-  const { currentUser } = useContext(AuthContext);
+  const { currentUser, token } = useContext(AuthContext);
 
   const { id } = match.params;
 
@@ -30,7 +31,7 @@ const Solution = ({ getSolution, solution, match, createComment, error }) => {
       solutionId: solution.id,
       userId: currentUser.id,
     };
-    createComment(commentParams);
+    createComment(commentParams, token);
   };
   if (error && !solution) {
     return <Error err={error} />;
@@ -83,7 +84,7 @@ const Solution = ({ getSolution, solution, match, createComment, error }) => {
                 <DeleteModal solutionId={solution.id} />
               </>
             ) : (
-              ""
+              <ComingSoon />
             )}
           </Box>
           <Divider mt={2} />
