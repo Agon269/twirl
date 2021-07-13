@@ -2,7 +2,7 @@
 
 ## Demo
 
-[Firebase](https://twirl-845f4.web.app/)
+[Deployed with Firebase](https://twirl-845f4.web.app/)
 
 ## Built using
 
