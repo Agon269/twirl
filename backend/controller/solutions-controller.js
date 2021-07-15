@@ -139,7 +139,6 @@ const editsolution = async (req, res, next) => {
   }
 
   solution.set({
-    title: req.body.title,
     description: req.body.description,
   });
 
@@ -205,6 +204,20 @@ const usersolutions = async (req, res, next) => {
   res.send(solutions);
 };
 
+const problemsolutions = async (req, res, next) => {
+  let solutions;
+  try {
+    solutions = await Solution.find({ problem: req.params.id })
+      .populate("user")
+      .populate("problem");
+  } catch (err) {
+    const error = new HttpError("Sorry something went wrong.", 500);
+    return next(error);
+  }
+
+  res.send(solutions);
+};
+
 exports.showsolution = showsolution;
 exports.createcomment = createcomment;
 exports.editsolution = editsolution;
@@ -212,3 +225,4 @@ exports.getsolutions = getsolutions;
 exports.deletesolution = deletesolution;
 exports.usersolutions = usersolutions;
 exports.createsol = createsol;
+exports.problemsolutions = problemsolutions;

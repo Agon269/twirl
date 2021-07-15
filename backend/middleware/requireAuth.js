@@ -14,14 +14,8 @@ const requireAuth = (req, res, next) => {
     }
     next();
   } else {
-    try {
-      const token = req.headers.cookie.split("=");
-      const payload = jwt.verify(token[1], process.env.JWT_KEY);
-      req.user = payload;
-    } catch (err) {
-      console.log(err);
-    }
-    next();
+    const error = new HttpError("invalid credentials", 401);
+    return next(error);
   }
 };
 module.exports = requireAuth;

@@ -5,6 +5,7 @@ const User = require("../models/user");
 const Problem = require("../models/problem");
 
 const createproblem = async (req, res, next) => {
+  console.log("Er");
   const errors = validationResult(req);
 
   if (!errors.isEmpty()) {

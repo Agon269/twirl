@@ -5,6 +5,7 @@ const bcrypt = require("bcrypt");
 const User = require("../models/user");
 const HttpError = require("../models/error");
 const { avatars } = require("../models/avatars");
+
 const signJwt = (id, userName, avatar) => {
   return jwt.sign({ id, userName, avatar }, process.env.JWT_KEY);
 };
@@ -13,9 +14,8 @@ const sendToken = (user, statusCode, req, res) => {
   const token = signJwt(user.id, user.userName, user.avatar);
   const options = {
     secure: false,
-    httpOnly: false,
   };
-  res.cookie("jwt", token, options);
+  res.cookie("user", token, options);
 
   user.password = undefined;
 
@@ -107,22 +107,6 @@ const signin = async (req, res, next) => {
   sendToken(existingUser, 200, req, res);
 };
 
-//============================================== SIGNOUT =================================
-const signout = async (req, res, next) => {
-  const options = {
-    expires: new Date(Date.now() + 10000),
-    secure: false,
-    httpOnly: false,
-  };
-  res.clearCookie("jwt");
-
-  res.status(200).json({ status: "success" });
-};
-
-exports.secretContent = (req, res) => {
-  res.status(200).json({ status: "SECRET CONTENT SHOWN!!!" });
-};
-
 //============================================= CURRENT USER =============================
 const currentuser = async (req, res, next) => {
   res.send({ currentUser: req.user || null });
@@ -141,6 +125,6 @@ const getuser = async (req, res, next) => {
 };
 exports.signup = signup;
 exports.signin = signin;
-exports.signout = signout;
+
 exports.currentuser = currentuser;
 exports.getuser = getuser;

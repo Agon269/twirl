@@ -18,7 +18,7 @@ router.post("/comment/:id", requireAuth, solutionControllers.createcomment);
 
 router.put(
   "/edit/:id",
-  [check("title").not().isEmpty(), check("description").not().isEmpty()],
+  check("description").not().isEmpty(),
   requireAuth,
   solutionControllers.editsolution
 );
@@ -26,5 +26,6 @@ router.put(
 router.delete("/:id", requireAuth, solutionControllers.deletesolution);
 
 router.get("/user/:id", solutionControllers.usersolutions);
+router.get("/problem/:id", solutionControllers.problemsolutions);
 
 module.exports = router;

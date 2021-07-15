@@ -10,13 +10,6 @@ import App from "./App";
 import reducers from "./reducers";
 import theme from "./theme";
 
-// const theme = {
-//   modes: {
-//     dark: {
-//       background: "#000",
-//     },
-//   },
-// };
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 const store = createStore(
   reducers,
