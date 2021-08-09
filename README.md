@@ -37,7 +37,7 @@ A website that lets coders share their coding problems and other coders can help
 Clone repository
 
 Create a firebase project
-Get api keys and replace the keys in the firebase file
+get api keys and replace the keys in the firebase file
 
 ```
 const app = firebase.initializeApp({
